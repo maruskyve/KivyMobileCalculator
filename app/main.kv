@@ -1,0 +1,188 @@
+#: import window kivy.core.window
+#: import hex kivy.utils.get_color_from_hex
+#: import mdbutton kivymd.uix.button
+
+#:set winSize window.Window.size
+#:set winWidth winSize[0]
+#:set winHeight winSize[1]
+
+<Sm>:
+    Home:
+        name: 'homeSc'
+
+<Home>:
+    #:set sh_none (None, None)
+    #:set xPadding 10
+    #:set yPadding 5
+    BoxLayout:
+        id: main_bl
+        orientation: 'vertical'
+        spacing: 5
+        canvas.before:
+            Color:
+                rgb: hex('FFFFFFFF')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        BoxLayout:
+            id: home_header
+            orientation: 'vertical'
+            size_hint: sh_none
+            size: winWidth, winHeight*0.125
+            padding: xPadding, 0
+#            spacing: 5
+            canvas.before:
+                Color:
+                    # 20CA94
+                    rgb: hex('57C7BB')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            MDLabel:
+                text: 'Calculator'
+                size_hint: sh_none
+                size: home_header.size[0]-(xPadding*2), home_header.size[1]*0.7
+                color: hex('FFFFFFFF')
+                bold: True
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                font_size: int(self.size[1]*0.35)
+                padding: xPadding, 0
+                canvas.before:
+                    Color:
+                        rgb: hex('55D1C5')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            BoxLayout:
+                id: menu_bl
+                size_hint: sh_none
+                size: home_header.size[0]*0.5-xPadding, home_header.size[1]*0.3
+                canvas.before:
+                    Color:
+                        rgb: hex('2DC9B1')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                #:set menu_bl_child_font_color '55D1C5'
+                Button:
+                    text: 'Rate App'
+#                    md_bg_color: hex('FFFFFF')
+                    background_color: hex('FFFFFF')
+                    background_normal: ''
+#                    text_color: hex('20CA94')
+                    color: hex(menu_bl_child_font_color)
+                    on_release:
+                Button:
+                    text: 'Close'
+                    background_color: hex('FFFFFF')
+                    background_normal: ''
+                    color: hex(menu_bl_child_font_color)
+#                    size_hint: sh_none
+#                    size: home_header.size[0]*0.25-xPadding, home_header.size[1]
+                    on_release:
+                        root.appExit()
+
+        BoxLayout:
+            id: content_output_bl
+            orientation: 'vertical'
+            size_hint: sh_none
+            size: winWidth, winHeight*0.3
+            padding: xPadding, yPadding
+            spacing: 2
+            BoxLayout:
+                id: result_bl
+                orientation: 'vertical'
+                padding: xPadding, 0
+                canvas.before:
+                    Color:
+                        rgb: hex('55D1C5')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                Label:
+                    id: result
+                    text_size: self.size
+                    halign: 'right'
+                    valign: 'middle'
+                    font_size: int(self.size[1]*0.25)
+            MDTextFieldRect:
+                id: prep_exp
+                hint_text: 'Empty Expression'
+                hint_text_color: hex('58C0B4')
+#                helper_text: "This will disappear when you click off"
+#                helper_text_mode: "on_focus"
+                multiline: False
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                font_size: int(self.size[1]*0.325)
+                foreground_color: hex('58C0B4')
+                on_text_validate:
+                    root.execAssignment('=')
+
+        BoxLayout:
+            #:set input_bl_spacing 1
+            id: input_bl
+            size_hint: sh_none
+            size: winWidth, winHeight*0.4
+            padding: xPadding, 0
+            spacing: input_bl_spacing
+            BoxLayout:
+                id: operator_bl
+                size_hint: sh_none
+                size: input_bl.size[0]*0.325, input_bl.size[1]
+                spacing: input_bl_spacing
+                on_parent:
+                    root.createOperatorWidgets(self)
+                BoxLayout:
+                    id: operator_0_bl
+                    orientation: 'vertical'
+                    spacing: input_bl_spacing
+                BoxLayout:
+                    id: operator_1_bl
+                    orientation: 'vertical'
+                    size_hint: sh_none
+                    size: operator_bl.size[0]*0.3, operator_bl.size[1]
+                    spacing: input_bl_spacing
+            BoxLayout:
+                id: number_assignment_bl
+                orientation: 'vertical'
+                spacing: input_bl_spacing
+                BoxLayout:
+                    id: assignment_bl
+                    orientation: 'vertical'
+                    spacing: input_bl_spacing
+                    on_parent:
+                        root.createAssignmentWidgets(self)
+                GridLayout:
+                    id: number_gl
+                    spacing: input_bl_spacing
+                    on_parent:
+                        root.createNumberWidgets(self)
+
+        BoxLayout:
+            id: blank
+        BoxLayout:
+            id: home_footer
+            size_hint: sh_none
+            size: winWidth, winHeight*0.075
+            padding: xPadding, 0
+            canvas.before:
+                Color:
+                    rgb: hex('57C7BB')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: 'Footer'
+                bold: True
+                color: hex('FFFFFFFF')
+                font_size: int(self.size[1]*0.35)
+                canvas.before:
+                    Color:
+                        rgb: hex('55D1C5')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
